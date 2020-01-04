@@ -2,6 +2,7 @@ case $(tty) in /dev/tty1)
     sway ;;
 esac
 
+
 precmd () { print -Pn "\e]0;`pwd`\a" }
 preexec () { print -Pn "\e]0;$1\a" }
 
