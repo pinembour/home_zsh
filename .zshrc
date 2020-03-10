@@ -90,18 +90,12 @@ bindkey '^[\' ncmpcppShow
 
 cdUndoKey() {
   popd
-  zle       reset-prompt
-  echo
-  ls
-  zle       reset-prompt
+  zle reset-prompt
 }
 
 cdParentKey() {
   pushd ..
-  zle      reset-prompt
-  echo
-  ls
-  zle       reset-prompt
+  zle reset-prompt
 }
 
 zle -N                 cdParentKey
