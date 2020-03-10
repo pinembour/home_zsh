@@ -2,6 +2,7 @@ case $(tty) in /dev/tty1)
     sway ;;
 esac
 
+
 precmd () { print -Pn "\e]0;`pwd`\a" }
 preexec () { print -Pn "\e]0;$1\a" }
 
@@ -28,7 +29,9 @@ zstyle ':completion:*:warnings' format '%BNo matches found%b'
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh_cache
 zstyle ':completion:*' menu select
+zstyle ':completion:*' rehash true
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
+
 
 fpath=(~/.config/zsh/functions $fpath)
 
@@ -41,14 +44,7 @@ prompt nabos
 fpath=(~/.zsh/completions $fpath)
 autoload -U compinit && compinit
 
-autoload -U up-line-or-beginning-search
-autoload -U down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search # Up
-bindkey "^[[B" down-line-or-beginning-search # Down
-
-# vi mode
+# vim mode
 bindkey -v
 export KEYTIMEOUT=1
 # Use vim keys in tab complete menu:
@@ -59,7 +55,15 @@ bindkey -M menuselect 'r' vi-down-line-or-history
 bindkey -v '^?' backward-delete-char
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
-bindkey '^e' edit-command-line
+bindkey '^f' edit-command-line
+
+autoload -U up-line-or-beginning-search; zle -N up-line-or-beginning-search
+autoload -U down-line-or-beginning-search; zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search # Up
+bindkey "^[[B" down-line-or-beginning-search # Down
+
+bindkey "^A" vi-beginning-of-line
+bindkey "^E" vi-end-of-line
 
 # Set title to GNU screen/byobu tab
 settitle() {
@@ -76,6 +80,34 @@ ssh() {
     command ssh "$@"
     settitle $(hostname)
 }
+
+ncmpcppShow() {
+  ncmpcpp <$TTY
+  zle redisplay
+}
+zle -N ncmpcppShow
+bindkey '^[\' ncmpcppShow
+
+cdUndoKey() {
+  popd
+  zle       reset-prompt
+  echo
+  ls
+  zle       reset-prompt
+}
+
+cdParentKey() {
+  pushd ..
+  zle      reset-prompt
+  echo
+  ls
+  zle       reset-prompt
+}
+
+zle -N                 cdParentKey
+zle -N                 cdUndoKey
+bindkey '^[[1;3A'      cdParentKey
+bindkey '^[[1;3D'      cdUndoKey
 
 clear-screen() { clear; zle redisplay; }
 zle -N clear-screen

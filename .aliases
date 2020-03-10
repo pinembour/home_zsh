@@ -11,8 +11,8 @@ alias gtop="LANG=en_US.utf8 TERM=xterm-256color gtop"
 alias reboot="sudo reboot"
 
 # Misc
-alias bépo="cat ~/bepo.txt"
-alias bepo="cat ~/bepo.txt"
+alias bépo="cat ~/.config/zsh/bepo.txt"
+alias bepo="cat ~/.config/zsh/bepo.txt"
 alias w="sudo wifi-menu"
 
 alias shutdown=" shutdown"
